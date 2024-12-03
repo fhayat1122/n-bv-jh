@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask for a Date!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        h1 {
+            color: #4CAF50;
+            font-size: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .final-message {
+            font-size: 20px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .animated {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #gifContainer img {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="questionContainer">
+        <h1>Hey! 💖 Want to go on a date with me? 💫</h1>
+        <p class="message">Click Yes or No:</p>
+
+        <button class="btn" onclick="showActivityOptions()">Yes, I'd love to! 💖</button>
+        <button class="btn" onclick="declineDate()">No, thank you. 😅</button>
+    </div>
+
+    <div class="container hidden" id="activitySection">
+        <p class="message">Great! Choose an adventure:</p>
+
+        <button class="btn animated" onclick="chooseOption('coffee')">Go for a coffee date ☕</button>
+        <button class="btn animated" onclick="chooseOption('movie')">Watch a movie 🎥</button>
+        <button class="btn animated" onclick="chooseOption('walk')">Take a walk in the park 🌳</button>
+        <button class="btn animated" onclick="chooseOption('surprise')">Plan a surprise (Your choice!) 🎁</button>
+
+        <div id="gifContainer"></div>
+    </div>
+
+    <div class="container hidden" id="dateTimeSection">
+        <p class="message">When should we make this happen?</p>
+        <input type="date" id="dateInput">
+        <input type="time" id="timeInput">
+        <button class="btn" onclick="confirmDate()">Set Date & Time 🎉</button>
+    </div>
+
+    <div class="container hidden" id="finalMessageContainer">
+        <div class="final-message" id="finalMessage"></div>
+    </div>
+
+    <script>
+        let selectedOption = '';
+
+        function showActivityOptions() {
+            document.getElementById('questionContainer').classList.add('hidden');
+            document.getElementById('activitySection').classList.remove('hidden');
+        }
+
+        function declineDate() {
+            document.getElementById('questionContainer').classList.add('hidden');
+            document.querySelector('.message').textContent = "That's okay, maybe another time! 😊";
+            setTimeout(() => {
+                document.querySelector('.message').textContent = "Take care!";
+            }, 2000);
+        }
+
+        function chooseOption(option) {
+            selectedOption = option;
+            showGif(option); // Show the relevant GIF
+            document.getElementById('activitySection').classList.add('hidden');
+            document.getElementById('dateTimeSection').classList.remove('hidden');
+        }
+
+        function showGif(option) {
+            const gifContainer = document.getElementById('gifContainer');
+            gifContainer.innerHTML = ''; // Clear any previous GIFs
+
+            let gifUrl = '';
+            if (option === 'coffee') {
+                gifUrl = 'https://media.giphy.com/media/l3vR1ohFfW0sPYz3m/giphy.gif'; // Coffee GIF
+            } else if (option === 'movie') {
+                gifUrl = 'https://media.giphy.com/media/3o6gE5pY2YW9z2kNmY/giphy.gif'; // Movie GIF
+            } else if (option === 'walk') {
+                gifUrl = 'https://media.giphy.com/media/xT5LMBJTuS4s4wr9yI/giphy.gif'; // Walk GIF
+            } else if (option === 'surprise') {
+                gifUrl = 'https://media.giphy.com/media/3o6gE3I5HshP3ApA/giphy.gif'; // Surprise GIF
+            }
+
+            const img = document.createElement('img');
+            img.src = gifUrl;
+            gifContainer.appendChild(img);
+        }
+
+        function confirmDate() {
+            const date = document.getElementById('dateInput').value;
+            const time = document.getElementById('timeInput').value;
+
+            if (date && time) {
+                const message = `Yay! I can't wait to ${getActivity()} on ${date} at ${time}! 🥳💖`;
+                document.getElementById('finalMessage').textContent = message;
+                document.getElementById('finalMessageContainer').classList.remove('hidden');
+                document.getElementById('dateTimeSection').classList.add('hidden');
+            } else {
+                alert('Please choose a valid date and time!');
+            }
+        }
+
+        function getActivity() {
+            switch (selectedOption) {
+                case 'coffee': return 'go for a coffee date';
+                case 'movie': return 'watch a movie';
+                case 'walk': return 'take a walk in the park';
+                case 'surprise': return 'plan a surprise';
+                default: return '';
+            }
+        }
+
+        // Delay for activity buttons animation to complete before showing
+        setTimeout(() => {
+            const activityButtons = document.querySelectorAll('#activitySection .btn');
+            activityButtons.forEach(button => {
+                button.classList.add('animated');
+            });
+        }, 100);
+    </script>
+
+</body>
+</html>
